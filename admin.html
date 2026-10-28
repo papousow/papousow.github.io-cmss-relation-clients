@@ -261,7 +261,7 @@
           <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs ${u.actif?'bg-green-100 text-green-800':'bg-red-100 text-red-800'}">${u.actif?'Actif':'Désactivé'}</span></td>
           <td class="px-4 py-3 text-slate-500 text-xs">${date}</td>
           <td class="px-4 py-3">
-            ${u.username !== 'admin' ? `<button onclick="toggleActif('${u.id}')" class="text-xs font-medium ${u.actif?'text-red-600':'text-green-600'}">${u.actif?'Désactiver':'Activer'}</button>` : '<span class="text-xs text-slate-400">—</span>'}
+            ${u.username !== 'admin' ? `<button onclick="toggleActif('${u.id}')" class="text-xs font-medium ${u.actif?'text-amber-600':'text-green-600'} mr-2">${u.actif?'Désactiver':'Activer'}</button><button onclick="supprimerAgent('${u.id}','${(u.nom||'').replace(/'/g,"")}');" class="text-xs font-medium text-red-600">Supprimer</button>` : '<span class="text-xs text-slate-400">—</span>'}
           </td>
         </tr>`;
       }).join('');
@@ -275,6 +275,31 @@
       localStorage.setItem('cmss_users', JSON.stringify(users));
       renderAgents();
       renderDashboard();
+    }
+
+    function supprimerAgent(id, nom) {
+      const users = getUsers();
+      const u = users.find(x => x.id === id);
+      if (!u || u.username === 'admin') {
+        alert('Impossible de supprimer le compte administrateur.');
+        return;
+      }
+      if (!confirm('Supprimer définitivement le compte de « ' + (nom || u.nom || u.username) + ' » ?\nCette action est irréversible.')) return;
+      const next = users.filter(x => x.id !== id);
+      localStorage.setItem('cmss_users', JSON.stringify(next));
+      // nettoyer stats
+      try {
+        const stats = JSON.parse(localStorage.getItem('cmss_agent_stats') || '{}');
+        delete stats[id];
+        localStorage.setItem('cmss_agent_stats', JSON.stringify(stats));
+      } catch(e) {}
+      // si CMSSDB cloud disponible
+      if (window.CMSSDB && typeof CMSSDB.deleteAgent === 'function') {
+        CMSSDB.deleteAgent(id).catch(function(){});
+      }
+      renderAgents();
+      renderDashboard();
+      alert('Compte supprimé.');
     }
 
     function creerAgent(e) {

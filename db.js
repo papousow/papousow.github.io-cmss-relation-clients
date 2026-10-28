@@ -103,6 +103,30 @@
     if (u) { u.actif = actif; localStorage.setItem('cmss_users', JSON.stringify(users)); }
   }
 
+  async function deleteAgent(id) {
+    if (mode === 'cloud') {
+      const { error } = await supabase.from('agents').delete().eq('id', id);
+      if (error) throw error;
+      return;
+    }
+    let users = JSON.parse(localStorage.getItem('cmss_users') || '[]');
+    users = users.filter(x => x.id !== id && x.username !== 'admin');
+    // also prevent deleting admin by id if username is admin
+    const stillAdmin = users.find(x => x.username === 'admin');
+    if (!stillAdmin) {
+      // restore admin if somehow removed
+      users.unshift({
+        id: 'admin-001', username: 'admin', password: 'Admin@CMSS2026',
+        nom: 'Administrateur CMSS', role: 'admin', actif: true, createdAt: new Date().toISOString()
+      });
+    }
+    localStorage.setItem('cmss_users', JSON.stringify(users));
+    // clean stats
+    const stats = JSON.parse(localStorage.getItem('cmss_agent_stats') || '{}');
+    delete stats[id];
+    localStorage.setItem('cmss_agent_stats', JSON.stringify(stats));
+  }
+
   // ---- Réclamations / RDV / Suivis ----
   async function insertReclamation(row) {
     if (mode === 'cloud') {
@@ -247,7 +271,7 @@
   }
 
   window.CMSSDB = {
-    init, getMode, listAgents, login, createAgent, setAgentActif,
+    init, getMode, listAgents, login, createAgent, setAgentActif, deleteAgent,
     insertReclamation, insertRdv, searchSuivis, recordAction, getAgentStats, sendSms
   };
 })();
