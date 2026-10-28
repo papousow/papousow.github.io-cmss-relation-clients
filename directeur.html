@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mot du Directeur — CMSS Relation Clients</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{primary:{50:'#eff6ff',100:'#dbeafe',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e3a8a',900:'#1e3a5f'},gold:{400:'#fbbf24',500:'#f59e0b',600:'#d97706'}}}}}</script>
+  <style>
+    .gallery-img { transition: transform 0.3s; }
+    .gallery-img:hover { transform: scale(1.03); }
+  </style>
+<script src="auth.js"></script>
+<script>
+  (function(){
+    var s = CMSSAuth.requireAuth(["admin","agent"]);
+    if (!s) return;
+    window.__cmssSession = s;
+    document.addEventListener("DOMContentLoaded", function(){
+      var bar = document.createElement("div");
+      bar.className = "bg-slate-800 text-white text-xs";
+      bar.innerHTML = '<div class="max-w-6xl mx-auto px-4 py-1.5 flex justify-between items-center flex-wrap gap-1">' +
+        '<span>👤 ' + s.nom + ' (' + s.role + ')</span>' +
+        '<span class="flex gap-3">' +
+        (s.role === "admin" ? '<a href="admin.html" class="hover:text-yellow-300">Administration</a>' : '') +
+        '<button onclick="CMSSAuth.logout()" class="hover:text-yellow-300">Déconnexion</button></span></div>';
+      document.body.insertBefore(bar, document.body.firstChild);
+    });
+  })();
+</script>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+  <div class="bg-primary-800 text-white text-sm">
+    <div class="max-w-6xl mx-auto px-4 py-2 flex items-center justify-between flex-wrap gap-2">
+      <a href="tel:80002238" class="font-medium hover:text-primary-200">📞 Numéro vert : <strong>8000 2238</strong></a>
+      <span class="text-primary-200 text-xs sm:text-sm">✓ Services 100% gratuits</span>
+    </div>
+  </div>
+
+  <header class="bg-white shadow-md border-b-2 border-primary-700 sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-3">
+        <img src="logo-cmss.png" alt="Logo CMSS" class="h-12 w-auto bg-white rounded-lg p-0.5 shadow-sm object-contain">
+        <div class="hidden sm:block">
+          <div class="font-bold text-primary-800 text-lg leading-tight">CMSS</div>
+          <div class="text-xs text-slate-500">Relation Clientèle</div>
+        </div>
+      </a>
+      <nav class="hidden md:flex items-center gap-1 text-sm font-medium">
+        <a href="index.html" class="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100">Accueil</a>
+        <a href="suivi.html" class="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100">Suivre mon dossier</a>
+        <a href="reclamation.html" class="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100">Réclamation</a>
+        <a href="rdv.html" class="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100">Rendez-vous</a>
+        <a href="guides.html" class="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100">Pièces</a>
+        <a href="contacts.html" class="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100">Contacts</a>
+        <a href="directeur.html" class="px-3 py-2 rounded-md bg-primary-50 text-primary-700">Mot du Directeur</a>
+      </nav>
+      <a href="index.html" class="md:hidden text-sm text-primary-700 font-medium">← Accueil</a>
+    </div>
+  </header>
+
+  <!-- Bannière -->
+  <section class="relative bg-gradient-to-br from-primary-700 via-primary-800 to-primary-900 text-white overflow-hidden">
+    <div class="absolute inset-0 opacity-20 bg-cover bg-center" style="background-image:url('img-cmss-1.jpg')"></div>
+    <div class="relative max-w-4xl mx-auto px-4 py-14 sm:py-16 text-center">
+      <p class="text-gold-400 text-sm font-semibold tracking-wide uppercase mb-3">Direction des Relations Clients</p>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">Mot du Directeur</h1>
+      <p class="text-primary-200 max-w-2xl mx-auto">Remerciements et message de motivation à l'ensemble du personnel de la Direction des Relations Clients</p>
+    </div>
+  </section>
+
+  <main class="max-w-4xl mx-auto px-4 py-10">
+
+    <!-- Message principal -->
+    <article class="bg-white rounded-2xl shadow-lg border border-slate-100 p-6 sm:p-10 mb-10">
+      <div class="flex items-center gap-4 mb-6 pb-6 border-b border-slate-100">
+        <div class="w-16 h-16 rounded-full bg-primary-100 flex items-center justify-center text-3xl shrink-0">👔</div>
+        <div>
+          <h2 class="font-bold text-xl text-primary-800">Le Directeur des Relations Clients</h2>
+          <p class="text-sm text-slate-500">Caisse Malienne de Sécurité Sociale — CMSS</p>
+        </div>
+      </div>
+
+      <div class="prose prose-slate max-w-none space-y-5 text-slate-700 leading-relaxed">
+        <p class="text-lg font-medium text-primary-800">Chers collaborateurs, chères collaboratrices,</p>
+
+        <p>
+          C'est avec une profonde gratitude que je m'adresse à vous aujourd'hui. Chaque jour, vous êtes le visage de la CMSS auprès de nos usagers — retraités, fonctionnaires, militaires, parlementaires et leurs familles. Votre engagement, votre patience et votre professionnalisme font toute la différence.
+        </p>
+
+        <p>
+          <strong>Je vous remercie</strong> pour votre dévouement constant, souvent dans des conditions exigeantes. Accueillir, écouter, orienter, traiter les dossiers et les réclamations : autant de missions que vous accomplissez avec sérieux et humanité. C'est grâce à vous que la promesse de la CMSS — <em>« Servir et accompagner »</em> — prend tout son sens.
+        </p>
+
+        <div class="bg-primary-50 border-l-4 border-primary-600 rounded-r-xl p-5 my-6">
+          <p class="font-semibold text-primary-800 mb-2">Message de motivation</p>
+          <p class="text-primary-900 text-sm leading-relaxed">
+            Chaque dossier traité, chaque usager écouté, chaque problème résolu contribue à renforcer la confiance de nos concitoyens dans la sécurité sociale. Vous n'êtes pas seulement des agents : vous êtes des acteurs essentiels de la cohésion sociale et de la solidarité nationale. Continuez à exceller. Votre travail compte. Votre attitude inspire. Ensemble, nous construisons une CMSS plus proche, plus transparente et plus efficace.
+          </p>
+        </div>
+
+        <p>
+          Dans le cadre de la modernisation de nos services, l'espace Relation Clients que nous déployons vise à faciliter le quotidien des usagers tout en valorisant votre rôle. Utilisons ces outils pour mieux servir, tout en restant fidèles à nos valeurs d'<strong>écoute</strong>, de <strong>respect</strong> et de <strong>gratuité</strong> des prestations.
+        </p>
+
+        <p>
+          Je compte sur chacun et chacune d'entre vous pour maintenir ce niveau d'excellence et pour accompagner avec bienveillance tous ceux qui franchissent nos portes ou nous contactent.
+        </p>
+
+        <p class="font-medium">
+          Ensemble, servons mieux. Ensemble, accompagnons mieux.
+        </p>
+
+        <p class="mt-8">
+          Avec tout mon respect et ma reconnaissance,<br>
+          <strong class="text-primary-800">Le Directeur des Relations Clients</strong><br>
+          <span class="text-sm text-slate-500">Caisse Malienne de Sécurité Sociale</span>
+        </p>
+      </div>
+    </article>
+
+    <!-- Galerie photos -->
+    <section class="mb-10">
+      <h2 class="text-xl font-bold text-slate-800 mb-4 text-center">Notre engagement, notre famille</h2>
+      <p class="text-center text-slate-500 text-sm mb-6">Solidarité, inclusion et service au cœur de la mission CMSS</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="rounded-2xl overflow-hidden shadow-md gallery-img">
+          <img src="img-cmss-1.jpg" alt="Équipe CMSS" class="w-full h-56 object-cover">
+          <div class="bg-white p-3 text-sm text-slate-600">L'équipe unie autour de la mission CMSS</div>
+        </div>
+        <div class="rounded-2xl overflow-hidden shadow-md gallery-img">
+          <img src="img-cmss-2.jpg" alt="Solidarité et inclusion" class="w-full h-56 object-cover">
+          <div class="bg-white p-3 text-sm text-slate-600">Octobre — Mois de la Solidarité et de la Lutte contre l'Exclusion</div>
+        </div>
+        <div class="rounded-2xl overflow-hidden shadow-md gallery-img">
+          <img src="img-cmss-3.jpg" alt="Généations" class="w-full h-56 object-cover">
+          <div class="bg-white p-3 text-sm text-slate-600">Solidarité entre les générations</div>
+        </div>
+        <div class="rounded-2xl overflow-hidden shadow-md gallery-img">
+          <img src="img-cmss-4.jpg" alt="Famille et transmission" class="w-full h-56 object-cover">
+          <div class="bg-white p-3 text-sm text-slate-600">Accompagner les familles, servir avec humanité</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Valeurs -->
+    <section class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+      <div class="bg-white rounded-xl border border-slate-100 p-4 text-center shadow-sm">
+        <div class="text-2xl mb-2">🤝</div>
+        <div class="text-xs font-semibold text-primary-800">Solidarité</div>
+      </div>
+      <div class="bg-white rounded-xl border border-slate-100 p-4 text-center shadow-sm">
+        <div class="text-2xl mb-2">♿</div>
+        <div class="text-xs font-semibold text-primary-800">Inclusion</div>
+      </div>
+      <div class="bg-white rounded-xl border border-slate-100 p-4 text-center shadow-sm">
+        <div class="text-2xl mb-2">⚖️</div>
+        <div class="text-xs font-semibold text-primary-800">Égalité des chances</div>
+      </div>
+      <div class="bg-white rounded-xl border border-slate-100 p-4 text-center shadow-sm">
+        <div class="text-2xl mb-2">👥</div>
+        <div class="text-xs font-semibold text-primary-800">Cohésion sociale</div>
+      </div>
+    </section>
+
+    <div class="text-center">
+      <a href="index.html" class="inline-flex items-center gap-2 text-primary-700 font-medium hover:underline">
+        ← Retour à l'accueil
+      </a>
+    </div>
+  </main>
+
+  <footer class="bg-primary-900 text-primary-300 text-center text-xs py-6 mt-12">
+    © 2026 CMSS — Direction des Relations Clients — « Servir et accompagner »
+  </footer>
+</body>
+</html>

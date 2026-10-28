@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CMSS — Relation Clientèle</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {50:'#eff6ff',100:'#dbeafe',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e3a8a',900:'#1e3a5f'},
+            gold: {400:'#fbbf24',500:'#f59e0b',600:'#d97706'}
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .hero-slide {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+      opacity: 0; transition: opacity 1.2s ease-in-out;
+    }
+    .hero-slide.active { opacity: 1; }
+    .hero-overlay {
+      background: linear-gradient(135deg, rgba(30,58,138,0.88) 0%, rgba(30,58,95,0.82) 100%);
+    }
+  </style>
+<script src="auth.js"></script>
+<script>
+  (function(){
+    var s = CMSSAuth.requireAuth(["admin","agent"]);
+    if (!s) return;
+    window.__cmssSession = s;
+    document.addEventListener("DOMContentLoaded", function(){
+      var bar = document.createElement("div");
+      bar.className = "bg-slate-800 text-white text-xs";
+      bar.innerHTML = '<div class="max-w-6xl mx-auto px-4 py-1.5 flex justify-between items-center flex-wrap gap-1">' +
+        '<span>👤 ' + s.nom + ' (' + s.role + ')</span>' +
+        '<span class="flex gap-3">' +
+        (s.role === "admin" ? '<a href="admin.html" class="hover:text-yellow-300">Administration</a>' : '') +
+        '<button onclick="CMSSAuth.logout()" class="hover:text-yellow-300">Déconnexion</button></span></div>';
+      document.body.insertBefore(bar, document.body.firstChild);
+    });
+  })();
+</script>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+  <!-- Top bar -->
+  <div class="bg-primary-800 text-white text-sm relative z-50">
+    <div class="max-w-6xl mx-auto px-4 py-2 flex items-center justify-between flex-wrap gap-2">
+      <a href="tel:80002238" class="font-medium hover:text-primary-200">📞 Numéro vert : <strong>8000 2238</strong></a>
+      <span class="text-primary-200 text-xs sm:text-sm">✓ Tous les services sont 100% gratuits</span>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="bg-white shadow-md border-b-2 border-primary-700 sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-3">
+        <img src="logo-cmss.png" alt="Logo CMSS" class="h-12 w-auto bg-white rounded-lg p-0.5 shadow-sm object-contain">
+        <div class="hidden sm:block">
+          <div class="font-bold text-primary-800 text-lg leading-tight">CMSS</div>
+          <div class="text-xs text-slate-500">Relation Clientèle</div>
+        </div>
+      </a>
+      <nav class="hidden md:flex items-center gap-1 text-sm font-medium">
+        <a href="index.html" class="px-3 py-2 rounded-md bg-primary-50 text-primary-700">Accueil</a>
+        <a href="suivi.html" class="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100">Suivre mon dossier</a>
+        <a href="reclamation.html" class="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100">Réclamation</a>
+        <a href="rdv.html" class="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100">Rendez-vous</a>
+        <a href="guides.html" class="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100">Pièces</a>
+        <a href="contacts.html" class="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100">Contacts</a>
+        <a href="directeur.html" class="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100">Mot du Directeur</a>
+      </nav>
+      <a href="tel:80002238" class="md:hidden bg-gold-500 text-primary-900 font-semibold px-3 py-1.5 rounded-lg text-sm">8000 2238</a>
+    </div>
+  </header>
+
+  <!-- Hero avec carrousel d'images -->
+  <section class="relative text-white overflow-hidden" style="min-height: 420px;">
+    <!-- Slides -->
+    <div class="absolute inset-0">
+      <div class="hero-slide active" style="background-image:url('img-cmss-1.jpg')"></div>
+      <div class="hero-slide" style="background-image:url('img-cmss-2.jpg')"></div>
+      <div class="hero-slide" style="background-image:url('img-cmss-3.jpg')"></div>
+      <div class="hero-slide" style="background-image:url('img-cmss-4.jpg')"></div>
+    </div>
+    <!-- Overlay bleu -->
+    <div class="absolute inset-0 hero-overlay"></div>
+
+    <!-- Contenu -->
+    <div class="relative z-10 max-w-6xl mx-auto px-4 py-14 sm:py-20">
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gold-500/25 border border-gold-400/40 text-gold-300 text-sm font-medium mb-5">
+        ✓ Services 100% gratuits
+      </div>
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight mb-4 max-w-3xl drop-shadow-lg">
+        Espace Relation Clients de la CMSS
+      </h1>
+      <p class="text-lg text-blue-100 mb-8 max-w-2xl leading-relaxed drop-shadow">
+        Suivez vos dossiers, déposez une réclamation, prenez rendez-vous et consultez les pièces à fournir — simplement, depuis votre téléphone.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-3">
+        <a href="suivi.html" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-gold-500 text-primary-900 rounded-xl font-semibold hover:bg-gold-400 transition shadow-lg">
+          📋 Suivre mon dossier
+        </a>
+        <a href="reclamation.html" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-white/15 border border-white/30 text-white rounded-xl font-semibold hover:bg-white/25 transition backdrop-blur-sm">
+          📝 Déposer une réclamation
+        </a>
+      </div>
+
+      <!-- Indicateurs du carrousel -->
+      <div class="flex gap-2 mt-10" id="heroDots">
+        <button onclick="goSlide(0)" class="w-2.5 h-2.5 rounded-full bg-white transition" data-i="0"></button>
+        <button onclick="goSlide(1)" class="w-2.5 h-2.5 rounded-full bg-white/40 transition" data-i="1"></button>
+        <button onclick="goSlide(2)" class="w-2.5 h-2.5 rounded-full bg-white/40 transition" data-i="2"></button>
+        <button onclick="goSlide(3)" class="w-2.5 h-2.5 rounded-full bg-white/40 transition" data-i="3"></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Actions rapides -->
+  <section class="max-w-6xl mx-auto px-4 -mt-8 relative z-10">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <a href="suivi.html" class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition border border-slate-100">
+        <div class="w-12 h-12 rounded-xl bg-primary-600 flex items-center justify-center text-2xl mb-4">📋</div>
+        <h3 class="font-bold text-slate-800 text-lg mb-1">Suivre mon dossier</h3>
+        <p class="text-sm text-slate-500">Tableau de bord et suivi en temps réel</p>
+      </a>
+      <a href="reclamation.html" class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition border border-slate-100">
+        <div class="w-12 h-12 rounded-xl bg-gold-500 flex items-center justify-center text-2xl mb-4">📝</div>
+        <h3 class="font-bold text-slate-800 text-lg mb-1">Réclamation</h3>
+        <p class="text-sm text-slate-500">Déposer + formulaire téléchargeable</p>
+      </a>
+      <a href="rdv.html" class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition border border-slate-100">
+        <div class="w-12 h-12 rounded-xl bg-primary-700 flex items-center justify-center text-2xl mb-4">📅</div>
+        <h3 class="font-bold text-slate-800 text-lg mb-1">Rendez-vous</h3>
+        <p class="text-sm text-slate-500">Réserver un créneau en ligne</p>
+      </a>
+      <a href="guides.html" class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition border border-slate-100">
+        <div class="w-12 h-12 rounded-xl bg-primary-500 flex items-center justify-center text-2xl mb-4">📄</div>
+        <h3 class="font-bold text-slate-800 text-lg mb-1">Pièces à fournir</h3>
+        <p class="text-sm text-slate-500">Listes et informations par prestation</p>
+      </a>
+    </div>
+  </section>
+
+  <!-- Numéro vert -->
+  <section class="max-w-6xl mx-auto px-4 mt-10">
+    <div class="bg-gradient-to-r from-primary-50 to-blue-50 rounded-2xl border border-primary-100 p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-4">
+        <div class="w-14 h-14 rounded-full bg-primary-600 flex items-center justify-center text-2xl shrink-0">📞</div>
+        <div>
+          <p class="text-sm text-primary-600 font-medium">Numéro vert — Gratuit</p>
+          <a href="tel:80002238" class="text-2xl sm:text-3xl font-bold text-primary-800">8000 2238</a>
+        </div>
+      </div>
+      <p class="text-sm text-slate-600 max-w-xs text-center sm:text-right">
+        Nos conseillers répondent du lundi au vendredi, de 8h00 à 16h00.
+      </p>
+    </div>
+  </section>
+
+  <!-- Mot du Directeur (aperçu) -->
+  <section class="max-w-6xl mx-auto px-4 mt-14">
+    <div class="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden">
+      <div class="grid md:grid-cols-2">
+        <div class="bg-gradient-to-br from-primary-700 to-primary-900 p-8 text-white flex flex-col justify-center">
+          <p class="text-gold-400 text-sm font-medium mb-2">Mot du Directeur</p>
+          <h2 class="text-2xl font-bold mb-3">Direction des Relations Clients</h2>
+          <p class="text-primary-200 text-sm leading-relaxed mb-5">
+            Un message de remerciement et de motivation adressé à l'ensemble du personnel pour leur engagement au service des usagers.
+          </p>
+          <a href="directeur.html" class="inline-flex items-center gap-2 bg-gold-500 text-primary-900 font-semibold px-5 py-2.5 rounded-xl text-sm hover:bg-gold-400 transition w-fit">
+            Lire le message →
+          </a>
+        </div>
+        <div class="h-48 md:h-auto min-h-[200px] bg-cover bg-center" style="background-image:url('img-cmss-1.jpg')"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Engagements -->
+  <section class="max-w-6xl mx-auto px-4 mt-14 mb-10">
+    <h2 class="text-2xl font-bold text-center text-slate-800 mb-2">Un service conçu pour vous</h2>
+    <p class="text-center text-slate-500 mb-8 max-w-xl mx-auto">La CMSS s'engage à offrir un service transparent, accessible et gratuit.</p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="bg-white rounded-2xl border border-slate-100 p-6 text-center shadow-sm">
+        <div class="text-3xl mb-3">🛡️</div>
+        <h3 class="font-bold text-lg mb-2">100% Gratuit</h3>
+        <p class="text-sm text-slate-500">Aucun frais. Tous les services sont libres.</p>
+      </div>
+      <div class="bg-white rounded-2xl border border-slate-100 p-6 text-center shadow-sm">
+        <div class="text-3xl mb-3">⏱️</div>
+        <h3 class="font-bold text-lg mb-2">Disponible 24/7</h3>
+        <p class="text-sm text-slate-500">Suivez vos dossiers à tout moment.</p>
+      </div>
+      <div class="bg-white rounded-2xl border border-slate-100 p-6 text-center shadow-sm">
+        <div class="text-3xl mb-3">👥</div>
+        <h3 class="font-bold text-lg mb-2">Orienté usager</h3>
+        <p class="text-sm text-slate-500">Moins de déplacements, plus d'efficacité.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-primary-900 text-primary-100 mt-10">
+    <div class="bg-gold-500 text-primary-900">
+      <div class="max-w-6xl mx-auto px-4 py-3 text-center font-semibold text-sm">
+        Votre avis compte — Appelez le 8000 2238
+      </div>
+    </div>
+    <div class="max-w-6xl mx-auto px-4 py-10">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <div class="flex items-center gap-3 mb-3">
+            <img src="logo-cmss.png" alt="CMSS" class="h-10 w-auto bg-white rounded p-0.5 object-contain">
+            <div>
+              <div class="font-bold text-white">CMSS</div>
+              <div class="text-xs text-primary-300">Caisse Malienne de Sécurité Sociale</div>
+            </div>
+          </div>
+          <p class="text-sm text-primary-300">Servir et accompagner les assurés sociaux.</p>
+        </div>
+        <div>
+          <h3 class="font-semibold text-white mb-3 text-sm uppercase">Accès rapide</h3>
+          <ul class="space-y-2 text-sm">
+            <li><a href="suivi.html" class="hover:text-gold-400">Suivre mon dossier</a></li>
+            <li><a href="reclamation.html" class="hover:text-gold-400">Réclamation</a></li>
+            <li><a href="rdv.html" class="hover:text-gold-400">Rendez-vous</a></li>
+            <li><a href="guides.html" class="hover:text-gold-400">Pièces à fournir</a></li>
+            <li><a href="directeur.html" class="hover:text-gold-400">Mot du Directeur</a></li>
+            <li><a href="contacts.html" class="hover:text-gold-400">Contacts</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-semibold text-white mb-3 text-sm uppercase">Contact</h3>
+          <ul class="space-y-2 text-sm text-primary-200">
+            <li>📞 +223 20 29 30 46</li>
+            <li>📞 Numéro vert : 8000 2238</li>
+            <li>✉️ contact@cmss.ml</li>
+            <li>📍 Hamdallaye ACI 2000, Bamako</li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-primary-800 mt-8 pt-6 text-center text-xs text-primary-400">
+        © 2026 CMSS — Direction des Relations Clients — Services 100% gratuits
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Carrousel d'images
+    let current = 0;
+    const slides = document.querySelectorAll('.hero-slide');
+    const dots = document.querySelectorAll('#heroDots button');
+
+    function goSlide(i) {
+      slides[current].classList.remove('active');
+      dots[current].classList.remove('bg-white');
+      dots[current].classList.add('bg-white/40');
+      current = i;
+      slides[current].classList.add('active');
+      dots[current].classList.add('bg-white');
+      dots[current].classList.remove('bg-white/40');
+    }
+
+    setInterval(() => {
+      goSlide((current + 1) % slides.length);
+    }, 5000);
+  </script>
+</body>
+</html>

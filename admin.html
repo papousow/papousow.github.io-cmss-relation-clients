@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administration — CMSS Relation Clients</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{primary:{50:'#eff6ff',100:'#dbeafe',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e3a8a',900:'#1e3a5f'},gold:{500:'#f59e0b'}}}}}</script>
+  <script src="auth.js"></script>
+</head>
+<body class="bg-slate-100 text-slate-800">
+
+  <div id="app" class="hidden">
+    <!-- Top bar admin -->
+    <div class="bg-primary-900 text-white text-sm">
+      <div class="max-w-6xl mx-auto px-4 py-2 flex items-center justify-between">
+        <span>🔐 Espace Administrateur</span>
+        <div class="flex items-center gap-4">
+          <span id="adminName" class="text-primary-200"></span>
+          <button onclick="CMSSAuth.logout()" class="hover:text-gold-500">Déconnexion</button>
+        </div>
+      </div>
+    </div>
+
+    <header class="bg-white shadow border-b-2 border-primary-700">
+      <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <img src="logo-cmss.png" alt="CMSS" class="h-10 bg-white rounded p-0.5 object-contain">
+          <div>
+            <div class="font-bold text-primary-800">CMSS — Administration</div>
+            <div class="text-xs text-slate-500">Gestion des agents & évaluation</div>
+          </div>
+        </div>
+        <nav class="hidden sm:flex gap-2 text-sm">
+          <button onclick="showTab('dashboard')" class="tab-btn px-3 py-1.5 rounded-lg bg-primary-50 text-primary-700 font-medium" data-tab="dashboard">Tableau de bord</button>
+          <button onclick="showTab('agents')" class="tab-btn px-3 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100" data-tab="agents">Agents</button>
+          <button onclick="showTab('create')" class="tab-btn px-3 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100" data-tab="create">Créer un compte</button>
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100">Voir le site →</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-8">
+
+      <!-- TAB: Dashboard -->
+      <div id="tab-dashboard">
+        <h1 class="text-2xl font-bold mb-2">Tableau de bord — Évaluation des agents</h1>
+        <p class="text-slate-500 mb-6">Suivi de l'activité de chaque agent pour évaluation.</p>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8" id="globalStats">
+          <div class="bg-white rounded-xl shadow p-4 text-center border border-slate-100">
+            <div class="text-2xl font-bold text-primary-700" id="gsAgents">0</div>
+            <div class="text-xs text-slate-500">Agents actifs</div>
+          </div>
+          <div class="bg-white rounded-xl shadow p-4 text-center border border-slate-100">
+            <div class="text-2xl font-bold text-orange-600" id="gsRec">0</div>
+            <div class="text-xs text-slate-500">Réclamations traitées</div>
+          </div>
+          <div class="bg-white rounded-xl shadow p-4 text-center border border-slate-100">
+            <div class="text-2xl font-bold text-purple-600" id="gsRdv">0</div>
+            <div class="text-xs text-slate-500">RDV enregistrés</div>
+          </div>
+          <div class="bg-white rounded-xl shadow p-4 text-center border border-slate-100">
+            <div class="text-2xl font-bold text-blue-600" id="gsSuivi">0</div>
+            <div class="text-xs text-slate-500">Consultations suivi</div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow border border-slate-100 overflow-hidden">
+          <div class="px-6 py-4 border-b border-slate-100 font-semibold">Performance par agent</div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead class="bg-slate-50 text-slate-600">
+                <tr>
+                  <th class="text-left px-4 py-3">Agent</th>
+                  <th class="text-left px-4 py-3">Identifiant</th>
+                  <th class="text-center px-4 py-3">Réclamations</th>
+                  <th class="text-center px-4 py-3">RDV</th>
+                  <th class="text-center px-4 py-3">Suivis</th>
+                  <th class="text-center px-4 py-3">Total</th>
+                  <th class="text-left px-4 py-3">Dernière activité</th>
+                  <th class="text-left px-4 py-3">Évaluation</th>
+                </tr>
+              </thead>
+              <tbody id="perfBody"></tbody>
+            </table>
+          </div>
+          <div id="perfEmpty" class="hidden p-8 text-center text-slate-400 text-sm">Aucun agent ou aucune activité enregistrée.</div>
+        </div>
+
+        <!-- Détail agent -->
+        <div id="agentDetail" class="hidden mt-6 bg-white rounded-2xl shadow border border-slate-100 p-6">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="font-bold text-lg" id="detailAgentName">Détail agent</h2>
+            <button onclick="document.getElementById('agentDetail').classList.add('hidden')" class="text-slate-400 text-sm">Fermer ✕</button>
+          </div>
+          <div id="detailAgentActions" class="space-y-2 max-h-64 overflow-y-auto text-sm"></div>
+        </div>
+      </div>
+
+      <!-- TAB: Liste agents -->
+      <div id="tab-agents" class="hidden">
+        <h1 class="text-2xl font-bold mb-6">Gestion des agents</h1>
+        <div class="bg-white rounded-2xl shadow border border-slate-100 overflow-hidden">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-slate-600">
+              <tr>
+                <th class="text-left px-4 py-3">Nom</th>
+                <th class="text-left px-4 py-3">Identifiant</th>
+                <th class="text-left px-4 py-3">Rôle</th>
+                <th class="text-left px-4 py-3">Statut</th>
+                <th class="text-left px-4 py-3">Créé le</th>
+                <th class="text-left px-4 py-3">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="agentsBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB: Créer compte -->
+      <div id="tab-create" class="hidden">
+        <h1 class="text-2xl font-bold mb-2">Créer un compte agent</h1>
+        <p class="text-slate-500 mb-6">Seul l'administrateur peut créer des identifiants et mots de passe.</p>
+
+        <form id="createForm" onsubmit="creerAgent(event)" class="bg-white rounded-2xl shadow border border-slate-100 p-6 max-w-lg space-y-4">
+          <div>
+            <label class="block text-sm font-medium mb-1">Nom complet *</label>
+            <input required id="newNom" type="text" class="w-full border rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-primary-500" placeholder="Ex: Awa Traoré">
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Nom d'utilisateur *</label>
+            <input required id="newUser" type="text" class="w-full border rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-primary-500" placeholder="Ex: awa.traore">
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Mot de passe *</label>
+            <input required id="newPass" type="text" class="w-full border rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-primary-500" placeholder="Minimum 6 caractères">
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Rôle</label>
+            <select id="newRole" class="w-full border rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-primary-500">
+              <option value="agent">Agent (Relation Clients)</option>
+              <option value="admin">Administrateur</option>
+            </select>
+          </div>
+          <p id="createMsg" class="hidden text-sm"></p>
+          <button type="submit" class="w-full bg-primary-700 hover:bg-primary-800 text-white font-semibold py-3 rounded-xl">
+            Créer le compte
+          </button>
+        </form>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    const session = CMSSAuth.requireAuth(['admin']);
+    if (!session) { /* redirect handled */ }
+    else {
+      document.getElementById('app').classList.remove('hidden');
+      document.getElementById('adminName').textContent = session.nom + ' (' + session.username + ')';
+      refreshAll();
+    }
+
+    function showTab(tab) {
+      ['dashboard','agents','create'].forEach(t => {
+        document.getElementById('tab-' + t).classList.toggle('hidden', t !== tab);
+      });
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        const active = b.dataset.tab === tab;
+        b.className = 'tab-btn px-3 py-1.5 rounded-lg font-medium ' + (active ? 'bg-primary-50 text-primary-700' : 'text-slate-600 hover:bg-slate-100');
+      });
+      if (tab === 'dashboard') renderDashboard();
+      if (tab === 'agents') renderAgents();
+    }
+
+    function getUsers() {
+      return JSON.parse(localStorage.getItem('cmss_users') || '[]');
+    }
+    function getStats() {
+      return JSON.parse(localStorage.getItem('cmss_agent_stats') || '{}');
+    }
+
+    function evalLabel(total) {
+      if (total >= 20) return { text: 'Excellent', cls: 'bg-green-100 text-green-800' };
+      if (total >= 10) return { text: 'Bon', cls: 'bg-blue-100 text-blue-800' };
+      if (total >= 5) return { text: 'Moyen', cls: 'bg-yellow-100 text-yellow-800' };
+      if (total >= 1) return { text: 'Débutant', cls: 'bg-orange-100 text-orange-800' };
+      return { text: 'Inactif', cls: 'bg-slate-100 text-slate-600' };
+    }
+
+    function renderDashboard() {
+      const users = getUsers().filter(u => u.role === 'agent');
+      const stats = getStats();
+      let totalRec = 0, totalRdv = 0, totalSuivi = 0;
+
+      const tbody = document.getElementById('perfBody');
+      if (!users.length) {
+        tbody.innerHTML = '';
+        document.getElementById('perfEmpty').classList.remove('hidden');
+      } else {
+        document.getElementById('perfEmpty').classList.add('hidden');
+        tbody.innerHTML = users.map(u => {
+          const s = stats[u.id] || { counts: { reclamation:0, rdv:0, suivi:0 }, lastActivity: null };
+          const c = s.counts || {};
+          const rec = c.reclamation || 0;
+          const rdv = c.rdv || 0;
+          const suivi = c.suivi || 0;
+          const total = rec + rdv + suivi + (c.autre || 0);
+          totalRec += rec; totalRdv += rdv; totalSuivi += suivi;
+          const ev = evalLabel(total);
+          const last = s.lastActivity ? new Date(s.lastActivity).toLocaleString('fr-FR') : '—';
+          return `<tr class="border-t border-slate-100 hover:bg-slate-50">
+            <td class="px-4 py-3 font-medium">${u.nom}</td>
+            <td class="px-4 py-3 text-slate-500">${u.username}</td>
+            <td class="px-4 py-3 text-center">${rec}</td>
+            <td class="px-4 py-3 text-center">${rdv}</td>
+            <td class="px-4 py-3 text-center">${suivi}</td>
+            <td class="px-4 py-3 text-center font-bold">${total}</td>
+            <td class="px-4 py-3 text-xs text-slate-500">${last}</td>
+            <td class="px-4 py-3">
+              <span class="px-2 py-1 rounded-full text-xs font-medium ${ev.cls}">${ev.text}</span>
+              <button onclick="voirDetailAgent('${u.id}')" class="ml-2 text-primary-600 text-xs font-medium">Détail</button>
+            </td>
+          </tr>`;
+        }).join('');
+      }
+
+      document.getElementById('gsAgents').textContent = users.filter(u => u.actif).length;
+      document.getElementById('gsRec').textContent = totalRec;
+      document.getElementById('gsRdv').textContent = totalRdv;
+      document.getElementById('gsSuivi').textContent = totalSuivi;
+    }
+
+    function voirDetailAgent(id) {
+      const users = getUsers();
+      const u = users.find(x => x.id === id);
+      const stats = getStats()[id];
+      document.getElementById('detailAgentName').textContent = (u ? u.nom : id) + ' — Historique';
+      const actions = (stats && stats.actions) ? stats.actions : [];
+      document.getElementById('detailAgentActions').innerHTML = actions.length
+        ? actions.map(a => `<div class="flex justify-between border-b border-slate-50 py-2">
+            <span><strong>${a.type}</strong> — ${a.detail || ''}</span>
+            <span class="text-xs text-slate-400">${new Date(a.at).toLocaleString('fr-FR')}</span>
+          </div>`).join('')
+        : '<p class="text-slate-400">Aucune action enregistrée.</p>';
+      document.getElementById('agentDetail').classList.remove('hidden');
+    }
+
+    function renderAgents() {
+      const users = getUsers();
+      document.getElementById('agentsBody').innerHTML = users.map(u => {
+        const date = u.createdAt ? new Date(u.createdAt).toLocaleDateString('fr-FR') : '—';
+        return `<tr class="border-t border-slate-100">
+          <td class="px-4 py-3 font-medium">${u.nom}</td>
+          <td class="px-4 py-3">${u.username}</td>
+          <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs ${u.role==='admin'?'bg-purple-100 text-purple-800':'bg-blue-100 text-blue-800'}">${u.role}</span></td>
+          <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs ${u.actif?'bg-green-100 text-green-800':'bg-red-100 text-red-800'}">${u.actif?'Actif':'Désactivé'}</span></td>
+          <td class="px-4 py-3 text-slate-500 text-xs">${date}</td>
+          <td class="px-4 py-3">
+            ${u.username !== 'admin' ? `<button onclick="toggleActif('${u.id}')" class="text-xs font-medium ${u.actif?'text-red-600':'text-green-600'}">${u.actif?'Désactiver':'Activer'}</button>` : '<span class="text-xs text-slate-400">—</span>'}
+          </td>
+        </tr>`;
+      }).join('');
+    }
+
+    function toggleActif(id) {
+      const users = getUsers();
+      const u = users.find(x => x.id === id);
+      if (!u || u.username === 'admin') return;
+      u.actif = !u.actif;
+      localStorage.setItem('cmss_users', JSON.stringify(users));
+      renderAgents();
+      renderDashboard();
+    }
+
+    function creerAgent(e) {
+      e.preventDefault();
+      const nom = document.getElementById('newNom').value.trim();
+      const username = document.getElementById('newUser').value.trim().toLowerCase();
+      const password = document.getElementById('newPass').value;
+      const role = document.getElementById('newRole').value;
+      const msg = document.getElementById('createMsg');
+
+      if (password.length < 6) {
+        msg.textContent = 'Le mot de passe doit contenir au moins 6 caractères.';
+        msg.className = 'text-sm text-red-600';
+        msg.classList.remove('hidden');
+        return;
+      }
+
+      const users = getUsers();
+      if (users.some(u => u.username === username)) {
+        msg.textContent = 'Cet identifiant existe déjà.';
+        msg.className = 'text-sm text-red-600';
+        msg.classList.remove('hidden');
+        return;
+      }
+
+      users.push({
+        id: 'user-' + Date.now(),
+        username,
+        password,
+        nom,
+        role,
+        actif: true,
+        createdAt: new Date().toISOString()
+      });
+      localStorage.setItem('cmss_users', JSON.stringify(users));
+
+      msg.textContent = 'Compte créé avec succès : ' + username;
+      msg.className = 'text-sm text-green-600';
+      msg.classList.remove('hidden');
+      document.getElementById('createForm').reset();
+      renderAgents();
+      renderDashboard();
+    }
+
+    function refreshAll() {
+      renderDashboard();
+      renderAgents();
+    }
+  </script>
+</body>
+</html>

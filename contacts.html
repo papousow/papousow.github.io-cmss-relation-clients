@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contacts — CMSS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{primary:{50:'#eff6ff',100:'#dbeafe',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e3a8a',900:'#1e3a5f'},gold:{500:'#f59e0b'}}}}}</script>
+<script src="auth.js"></script>
+<script>
+  (function(){
+    var s = CMSSAuth.requireAuth(["admin","agent"]);
+    if (!s) return;
+    window.__cmssSession = s;
+    document.addEventListener("DOMContentLoaded", function(){
+      var bar = document.createElement("div");
+      bar.className = "bg-slate-800 text-white text-xs";
+      bar.innerHTML = '<div class="max-w-6xl mx-auto px-4 py-1.5 flex justify-between items-center flex-wrap gap-1">' +
+        '<span>👤 ' + s.nom + ' (' + s.role + ')</span>' +
+        '<span class="flex gap-3">' +
+        (s.role === "admin" ? '<a href="admin.html" class="hover:text-yellow-300">Administration</a>' : '') +
+        '<button onclick="CMSSAuth.logout()" class="hover:text-yellow-300">Déconnexion</button></span></div>';
+      document.body.insertBefore(bar, document.body.firstChild);
+    });
+  })();
+</script>
+</head>
+<body class="bg-slate-50">
+  <div class="bg-primary-800 text-white text-sm py-2 px-4 flex justify-between items-center max-w-6xl mx-auto">
+    <a href="tel:80002238">📞 Numéro vert : <strong>8000 2238</strong></a>
+    <span class="text-primary-200 text-xs">Services gratuits</span>
+  </div>
+  <header class="bg-white shadow border-b-2 border-primary-700 sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2">
+        <img src="logo-cmss.png" alt="CMSS" class="h-10 bg-white rounded p-0.5 object-contain">
+        <span class="font-bold text-primary-800 hidden sm:inline">CMSS</span>
+      </a>
+      <nav class="hidden md:flex gap-1 text-sm font-medium">
+        <a href="index.html" class="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100">Accueil</a>
+        <a href="suivi.html" class="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100">Suivre mon dossier</a>
+        <a href="reclamation.html" class="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100">Réclamation</a>
+        <a href="rdv.html" class="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100">Rendez-vous</a>
+        <a href="guides.html" class="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100">Pièces</a>
+        <a href="contacts.html" class="px-3 py-2 rounded-md bg-primary-50 text-primary-700">Contacts</a>
+      </nav>
+      <a href="index.html" class="md:hidden text-sm text-primary-700 font-medium">← Accueil</a>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 py-8">
+    <h1 class="text-2xl font-bold text-slate-800 mb-2">Contacts</h1>
+    <p class="text-slate-500 mb-6">Directions régionales et centres de la CMSS.</p>
+
+    <div class="bg-white rounded-2xl shadow border border-slate-100 p-6 mb-6">
+      <h2 class="font-bold text-primary-800 text-lg mb-3">Direction Générale — Bamako</h2>
+      <div class="space-y-2 text-sm text-slate-600">
+        <p>📍 Hamdallaye ACI 2000, Bamako — BP 484</p>
+        <p>📞 +223 20 29 30 46 / +223 20 29 27 07</p>
+        <p>📞 Numéro vert : <a href="tel:80002238" class="text-primary-700 font-bold">8000 2238</a> (gratuit)</p>
+        <p>✉️ contact@cmss.ml</p>
+        <p>🕐 Lundi – Vendredi : 8h00 – 16h00</p>
+      </div>
+    </div>
+
+    <h2 class="font-semibold text-slate-800 mb-3">Directions régionales</h2>
+    <div class="space-y-3">
+      <div class="bg-white rounded-xl shadow border border-slate-100 p-4">
+        <h3 class="font-semibold text-primary-800">Bamako (District)</h3>
+        <p class="text-sm text-slate-500">Direction Régionale du District de Bamako</p>
+      </div>
+      <div class="bg-white rounded-xl shadow border border-slate-100 p-4">
+        <h3 class="font-semibold text-primary-800">Kayes</h3>
+        <p class="text-sm text-slate-500">Route de l'ex-aéroport — 📞 21 52 28 64</p>
+      </div>
+      <div class="bg-white rounded-xl shadow border border-slate-100 p-4">
+        <h3 class="font-semibold text-primary-800">Koulikoro</h3>
+        <p class="text-sm text-slate-500">Plateau II, face à l'EDM — 📞 21 26 28 52</p>
+      </div>
+      <div class="bg-white rounded-xl shadow border border-slate-100 p-4">
+        <h3 class="font-semibold text-primary-800">Sikasso</h3>
+        <p class="text-sm text-slate-500">Quartier Administratif Wayerma I — 📞 21 62 19 72</p>
+      </div>
+      <div class="bg-white rounded-xl shadow border border-slate-100 p-4">
+        <h3 class="font-semibold text-primary-800">Ségou</h3>
+        <p class="text-sm text-slate-500">Quartier Angouleme — 📞 21 32 23 15</p>
+      </div>
+      <div class="bg-white rounded-xl shadow border border-slate-100 p-4">
+        <h3 class="font-semibold text-primary-800">Mopti</h3>
+        <p class="text-sm text-slate-500">Sevaré, quartier administratif — 📞 21 42 06 76</p>
+      </div>
+      <div class="bg-white rounded-xl shadow border border-slate-100 p-4">
+        <h3 class="font-semibold text-primary-800">Tombouctou</h3>
+        <p class="text-sm text-slate-500">Quartier Bariz — 📞 21 92 20 31</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="bg-primary-900 text-primary-300 text-center text-xs py-6 mt-12">
+    © 2026 CMSS — Direction des Relations Clients
+  </footer>
+</body>
+</html>

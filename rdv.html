@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rendez-vous — CMSS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{primary:{50:'#eff6ff',100:'#dbeafe',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e3a8a',900:'#1e3a5f'},gold:{500:'#f59e0b'}}}}}</script>
+<script src="auth.js"></script>
+<script>
+  (function(){
+    var s = CMSSAuth.requireAuth(["admin","agent"]);
+    if (!s) return;
+    window.__cmssSession = s;
+    document.addEventListener("DOMContentLoaded", function(){
+      var bar = document.createElement("div");
+      bar.className = "bg-slate-800 text-white text-xs";
+      bar.innerHTML = '<div class="max-w-6xl mx-auto px-4 py-1.5 flex justify-between items-center flex-wrap gap-1">' +
+        '<span>👤 ' + s.nom + ' (' + s.role + ')</span>' +
+        '<span class="flex gap-3">' +
+        (s.role === "admin" ? '<a href="admin.html" class="hover:text-yellow-300">Administration</a>' : '') +
+        '<button onclick="CMSSAuth.logout()" class="hover:text-yellow-300">Déconnexion</button></span></div>';
+      document.body.insertBefore(bar, document.body.firstChild);
+    });
+  })();
+</script>
+</head>
+<body class="bg-slate-50">
+  <div class="bg-primary-800 text-white text-sm py-2 px-4 flex justify-between items-center max-w-6xl mx-auto">
+    <a href="tel:80002238">📞 Numéro vert : <strong>8000 2238</strong></a>
+    <span class="text-primary-200 text-xs">Services gratuits</span>
+  </div>
+  <header class="bg-white shadow border-b-2 border-primary-700 sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2">
+        <img src="logo-cmss.png" alt="CMSS" class="h-10 bg-white rounded p-0.5 object-contain">
+        <span class="font-bold text-primary-800 hidden sm:inline">CMSS</span>
+      </a>
+      <nav class="hidden md:flex gap-1 text-sm font-medium">
+        <a href="index.html" class="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100">Accueil</a>
+        <a href="suivi.html" class="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100">Suivre mon dossier</a>
+        <a href="reclamation.html" class="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100">Réclamation</a>
+        <a href="rdv.html" class="px-3 py-2 rounded-md bg-primary-50 text-primary-700">Rendez-vous</a>
+        <a href="guides.html" class="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100">Pièces</a>
+        <a href="contacts.html" class="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100">Contacts</a>
+        <a href="directeur.html" class="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100">Mot du Directeur</a>
+      </nav>
+      <a href="index.html" class="md:hidden text-sm text-primary-700 font-medium">← Accueil</a>
+    </div>
+  </header>
+
+  <main class="max-w-xl mx-auto px-4 py-8">
+    <h1 class="text-2xl font-bold text-slate-800 mb-2">Prendre un rendez-vous</h1>
+    <p class="text-slate-500 mb-6">Après confirmation, votre RDV apparaît dans « Suivre mon dossier » avec un numéro de suivi.</p>
+
+    <form id="formRdv" onsubmit="confirmerRdv(event)" class="bg-white rounded-2xl shadow-lg border border-slate-100 p-6 space-y-4">
+      <div>
+        <label class="block text-sm font-medium mb-1">Numéro d'affiliation *</label>
+        <input required id="aff" type="text" class="w-full border rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-primary-500">
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1">Nom et Prénom *</label>
+        <input required id="nom" type="text" class="w-full border rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-primary-500">
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1">Téléphone *</label>
+        <input required id="tel" type="tel" class="w-full border rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-primary-500">
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1">Direction / Centre *</label>
+        <select required id="centre" class="w-full border rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-primary-500">
+          <option value="">-- Choisir --</option>
+          <option>Direction Générale - Bamako (Hamdallaye ACI 2000)</option>
+          <option>Direction Régionale de Bamako</option>
+          <option>Direction Régionale de Kayes</option>
+          <option>Direction Régionale de Koulikoro</option>
+          <option>Direction Régionale de Sikasso</option>
+          <option>Direction Régionale de Ségou</option>
+          <option>Direction Régionale de Mopti</option>
+          <option>Direction Régionale de Tombouctou</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1">Motif du rendez-vous *</label>
+        <select required id="motif" class="w-full border rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-primary-500">
+          <option value="">-- Choisir --</option>
+          <option>Dépôt de dossier de pension</option>
+          <option>Suivi de dossier</option>
+          <option>Réclamation</option>
+          <option>Information AMO</option>
+          <option>Changement d'assignation</option>
+          <option>Autre</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1">Date souhaitée *</label>
+        <input required id="dateRdv" type="date" class="w-full border rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-primary-500">
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1">Créneau horaire *</label>
+        <select required id="creneau" class="w-full border rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-primary-500">
+          <option>08h00 - 09h00</option>
+          <option>09h00 - 10h00</option>
+          <option>10h00 - 11h00</option>
+          <option>11h00 - 12h00</option>
+          <option>14h00 - 15h00</option>
+          <option>15h00 - 16h00</option>
+        </select>
+      </div>
+      <button type="submit" class="w-full bg-primary-700 hover:bg-primary-800 text-white font-semibold py-3.5 rounded-xl">Confirmer le rendez-vous</button>
+    </form>
+
+    <div id="rdvSuccess" class="hidden mt-6 bg-green-50 border border-green-200 rounded-xl p-6 text-center">
+      <div class="text-4xl mb-2">✅</div>
+      <h3 class="font-bold text-green-800">Rendez-vous enregistré</h3>
+      <p class="text-sm text-green-700 mt-3">Votre numéro de suivi :</p>
+      <p class="text-2xl font-bold text-primary-800 my-2" id="numRdv">RDV-2026-XXXXX</p>
+      <p class="text-xs text-green-600 mb-4">Présentez-vous avec une pièce d'identité. Vous pouvez retrouver ce RDV dans « Suivre mon dossier ».</p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a id="lienSuiviRdv" href="suivi.html" class="inline-block bg-primary-700 hover:bg-primary-800 text-white font-semibold px-6 py-2.5 rounded-xl text-sm">
+          📋 Voir mon rendez-vous
+        </a>
+        <button onclick="location.reload()" class="text-sm text-primary-700 font-medium underline py-2">Prendre un autre RDV</button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="bg-primary-900 text-primary-300 text-center text-xs py-6 mt-12">
+    © 2026 CMSS — Direction des Relations Clients
+  </footer>
+  <script>
+    function confirmerRdv(e) {
+      e.preventDefault();
+      const num = 'RDV-2026-' + String(Math.floor(10000 + Math.random() * 90000));
+      const today = new Date();
+      const dateStr = today.toLocaleDateString('fr-FR');
+      const dateRdv = document.getElementById('dateRdv').value;
+      const dateRdvFmt = dateRdv ? new Date(dateRdv + 'T12:00:00').toLocaleDateString('fr-FR') : dateStr;
+
+      const item = {
+        id: num,
+        cat: 'rdv',
+        type: document.getElementById('motif').value,
+        objet: document.getElementById('motif').value,
+        aff: document.getElementById('aff').value,
+        nom: document.getElementById('nom').value,
+        tel: document.getElementById('tel').value,
+        centre: document.getElementById('centre').value,
+        creneau: dateRdvFmt + ' · ' + document.getElementById('creneau').value,
+        statut: 'confirme',
+        label: 'Confirmé',
+        color: 'bg-green-100 text-green-800',
+        date: dateStr,
+        historique: [
+          { etape: 'Confirmé', date: dateStr, desc: 'Rendez-vous pris en ligne — ' + dateRdvFmt + ' ' + document.getElementById('creneau').value }
+        ]
+      };
+
+      const list = JSON.parse(localStorage.getItem('cmss_suivis') || '[]');
+      list.unshift(item);
+      localStorage.setItem('cmss_suivis', JSON.stringify(list));
+
+      if (window.__cmssSession && window.CMSSAuth) {
+        CMSSAuth.recordAction(window.__cmssSession.id, 'rdv', num);
+      }
+      document.getElementById('formRdv').classList.add('hidden');
+      document.getElementById('numRdv').textContent = num;
+      document.getElementById('lienSuiviRdv').href = 'suivi.html?n=' + encodeURIComponent(num);
+      document.getElementById('rdvSuccess').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>

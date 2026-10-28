@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pièces à fournir — CMSS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{primary:{50:'#eff6ff',100:'#dbeafe',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e3a8a',900:'#1e3a5f'},gold:{500:'#f59e0b'}}}}}</script>
+<script src="auth.js"></script>
+<script>
+  (function(){
+    var s = CMSSAuth.requireAuth(["admin","agent"]);
+    if (!s) return;
+    window.__cmssSession = s;
+    document.addEventListener("DOMContentLoaded", function(){
+      var bar = document.createElement("div");
+      bar.className = "bg-slate-800 text-white text-xs";
+      bar.innerHTML = '<div class="max-w-6xl mx-auto px-4 py-1.5 flex justify-between items-center flex-wrap gap-1">' +
+        '<span>👤 ' + s.nom + ' (' + s.role + ')</span>' +
+        '<span class="flex gap-3">' +
+        (s.role === "admin" ? '<a href="admin.html" class="hover:text-yellow-300">Administration</a>' : '') +
+        '<button onclick="CMSSAuth.logout()" class="hover:text-yellow-300">Déconnexion</button></span></div>';
+      document.body.insertBefore(bar, document.body.firstChild);
+    });
+  })();
+</script>
+</head>
+<body class="bg-slate-50">
+  <div class="bg-primary-800 text-white text-sm py-2 px-4 flex justify-between items-center max-w-6xl mx-auto">
+    <a href="tel:80002238">📞 Numéro vert : <strong>8000 2238</strong></a>
+    <span class="text-primary-200 text-xs">Services gratuits</span>
+  </div>
+  <header class="bg-white shadow border-b-2 border-primary-700 sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2">
+        <img src="logo-cmss.png" alt="CMSS" class="h-10 bg-white rounded p-0.5 object-contain">
+        <span class="font-bold text-primary-800 hidden sm:inline">CMSS</span>
+      </a>
+      <nav class="hidden md:flex gap-1 text-sm font-medium">
+        <a href="index.html" class="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100">Accueil</a>
+        <a href="suivi.html" class="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100">Suivre mon dossier</a>
+        <a href="reclamation.html" class="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100">Réclamation</a>
+        <a href="rdv.html" class="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100">Rendez-vous</a>
+        <a href="guides.html" class="px-3 py-2 rounded-md bg-primary-50 text-primary-700">Pièces</a>
+        <a href="contacts.html" class="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100">Contacts</a>
+        <a href="directeur.html" class="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100">Mot du Directeur</a>
+      </nav>
+      <a href="index.html" class="md:hidden text-sm text-primary-700 font-medium">← Accueil</a>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 py-8">
+    <h1 class="text-2xl font-bold text-slate-800 mb-2">Pièces à fournir</h1>
+    <p class="text-slate-500 mb-6">Cliquez sur une prestation pour voir la liste complète des documents requis.</p>
+
+    <div class="mb-6">
+      <input type="text" id="filterGuides" onkeyup="filtrerGuides()" placeholder="Rechercher une prestation..." 
+             class="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500 outline-none">
+    </div>
+
+    <div id="guidesList" class="space-y-3">
+
+      <details class="bg-white rounded-xl shadow border border-slate-100 p-4 group" open>
+        <summary class="font-semibold cursor-pointer text-primary-800 list-none flex items-center justify-between">
+          <span>Pension de retraite (départ)</span>
+          <span class="text-slate-400 group-open:rotate-180 transition">▼</span>
+        </summary>
+        <ul class="mt-3 list-disc list-inside text-sm space-y-1.5 text-slate-600 pl-1">
+          <li>Formulaire de demande CMSS</li>
+          <li>Extrait d'acte de naissance du fonctionnaire</li>
+          <li>Extraits d'actes de naissance des enfants</li>
+          <li>Extrait d'acte de mariage</li>
+          <li>Certificat de vie collectif des enfants (original)</li>
+          <li>Arrêté de mise à la retraite (copie)</li>
+          <li>Arrêté d'intégration / titularisation (copie)</li>
+          <li>Relevé général de service (original)</li>
+          <li>Certificat de cessation de paiement — CCP (original)</li>
+          <li>RIB ou copie de carte bancaire</li>
+        </ul>
+      </details>
+
+      <details class="bg-white rounded-xl shadow border border-slate-100 p-4 group">
+        <summary class="font-semibold cursor-pointer text-primary-800 list-none flex items-center justify-between">
+          <span>Pension de réversion</span>
+          <span class="text-slate-400 group-open:rotate-180 transition">▼</span>
+        </summary>
+        <ul class="mt-3 list-disc list-inside text-sm space-y-1.5 text-slate-600 pl-1">
+          <li>Acte de décès</li>
+          <li>Acte de mariage</li>
+          <li>Acte de naissance du défunt</li>
+          <li>Actes de naissance des enfants</li>
+          <li>Certificat de vie collectif des enfants</li>
+          <li>Jugement d'hérédité (Tribunal)</li>
+          <li>Certificat de tutelle avec PV du conseil de famille</li>
+          <li>Arrêté de mise à la retraite / radiation</li>
+          <li>Relevé général de service</li>
+          <li>CCP + RIB</li>
+        </ul>
+      </details>
+
+      <details class="bg-white rounded-xl shadow border border-slate-100 p-4 group">
+        <summary class="font-semibold cursor-pointer text-primary-800 list-none flex items-center justify-between">
+          <span>Changement d'assignation</span>
+          <span class="text-slate-400 group-open:rotate-180 transition">▼</span>
+        </summary>
+        <ul class="mt-3 list-disc list-inside text-sm space-y-1.5 text-slate-600 pl-1">
+          <li>Imprimé de demande CMSS</li>
+          <li>Copie du bulletin de pension</li>
+          <li>RIB ou copie de la carte bancaire</li>
+          <li>Certificat de non endettement ou attestation de fermeture de compte (original)</li>
+          <li>Certificat d'individualité (si besoin)</li>
+        </ul>
+      </details>
+
+      <details class="bg-white rounded-xl shadow border border-slate-100 p-4 group">
+        <summary class="font-semibold cursor-pointer text-primary-800 list-none flex items-center justify-between">
+          <span>Assurance Maladie Obligatoire (AMO)</span>
+          <span class="text-slate-400 group-open:rotate-180 transition">▼</span>
+        </summary>
+        <ul class="mt-3 list-disc list-inside text-sm space-y-1.5 text-slate-600 pl-1">
+          <li>Extrait d'acte de mariage</li>
+          <li>Actes de naissance des ayants droit (conjoint, enfants, ascendants)</li>
+          <li>Certificat de vie des enfants de moins de 14 ans</li>
+          <li>Certificat de scolarité (enfants 14-21 ans)</li>
+          <li>Certificat médical (enfants handicapés)</li>
+          <li>Arrêté d'intégration / titularisation</li>
+          <li>Attestation de dépendance économique des ascendants</li>
+        </ul>
+      </details>
+
+      <details class="bg-white rounded-xl shadow border border-slate-100 p-4 group">
+        <summary class="font-semibold cursor-pointer text-primary-800 list-none flex items-center justify-between">
+          <span>Transfert de cotisations (CMSS → INPS)</span>
+          <span class="text-slate-400 group-open:rotate-180 transition">▼</span>
+        </summary>
+        <ul class="mt-3 list-disc list-inside text-sm space-y-1.5 text-slate-600 pl-1">
+          <li>Demande manuscrite timbrée à 200 FCFA</li>
+          <li>Acte de naissance</li>
+          <li>Relevé général de services</li>
+          <li>CCP</li>
+          <li>Arrêté d'intégration et de titularisation</li>
+          <li>Arrêté d'option pour le statut de l'INPS</li>
+        </ul>
+      </details>
+
+      <details class="bg-white rounded-xl shadow border border-slate-100 p-4 group">
+        <summary class="font-semibold cursor-pointer text-primary-800 list-none flex items-center justify-between">
+          <span>Remboursement de cotisations</span>
+          <span class="text-slate-400 group-open:rotate-180 transition">▼</span>
+        </summary>
+        <ul class="mt-3 list-disc list-inside text-sm space-y-1.5 text-slate-600 pl-1">
+          <li>Acte de naissance</li>
+          <li>Arrêté d'intégration / titularisation / radiation</li>
+          <li>Demande manuscrite timbrée à 200 FCFA</li>
+          <li>Relevé général de services</li>
+          <li>CCP</li>
+        </ul>
+      </details>
+
+    </div>
+
+    <div class="mt-8 bg-primary-50 border border-primary-100 rounded-xl p-4 text-sm text-primary-800">
+      <strong>Conseil :</strong> Préparez toutes les pièces avant de vous déplacer. Pour toute question, appelez le <a href="tel:80002238" class="font-bold underline">8000 2238</a>.
+    </div>
+  </main>
+
+  <footer class="bg-primary-900 text-primary-300 text-center text-xs py-6 mt-12">
+    © 2026 CMSS — Direction des Relations Clients
+  </footer>
+
+  <script>
+    function filtrerGuides() {
+      const q = document.getElementById('filterGuides').value.toLowerCase();
+      document.querySelectorAll('#guidesList details').forEach(d => {
+        const title = d.querySelector('summary').textContent.toLowerCase();
+        d.style.display = title.includes(q) ? '' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>

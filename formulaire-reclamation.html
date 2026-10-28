@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulaire de réclamation — CMSS</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 24px; color: #1e293b; font-size: 14px; }
+    h1 { font-size: 20px; color: #1e3a8a; margin-bottom: 4px; }
+    .subtitle { color: #64748b; margin-bottom: 20px; }
+    .header { display: flex; align-items: center; gap: 16px; border-bottom: 3px solid #1e3a8a; padding-bottom: 12px; margin-bottom: 20px; }
+    .header img { height: 60px; }
+    .field { margin-bottom: 14px; }
+    .field label { display: block; font-weight: 600; margin-bottom: 4px; font-size: 13px; }
+    .line { border-bottom: 1px solid #94a3b8; min-height: 28px; padding: 4px 0; }
+    .box { border: 1px solid #94a3b8; min-height: 100px; padding: 8px; }
+    .row { display: flex; gap: 20px; }
+    .row .field { flex: 1; }
+    .check { margin-right: 16px; }
+    .footer { margin-top: 30px; border-top: 1px solid #cbd5e1; padding-top: 12px; font-size: 12px; color: #64748b; }
+    .btn { background: #1e3a8a; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 14px; margin-right: 8px; }
+    .btn-secondary { background: #64748b; }
+    @media print {
+      .no-print { display: none !important; }
+      body { padding: 0; }
+    }
+  </style>
+<script src="auth.js"></script>
+<script>
+  (function(){
+    var s = CMSSAuth.requireAuth(["admin","agent"]);
+    if (!s) return;
+    window.__cmssSession = s;
+    document.addEventListener("DOMContentLoaded", function(){
+      var bar = document.createElement("div");
+      bar.className = "bg-slate-800 text-white text-xs";
+      bar.innerHTML = '<div class="max-w-6xl mx-auto px-4 py-1.5 flex justify-between items-center flex-wrap gap-1">' +
+        '<span>👤 ' + s.nom + ' (' + s.role + ')</span>' +
+        '<span class="flex gap-3">' +
+        (s.role === "admin" ? '<a href="admin.html" class="hover:text-yellow-300">Administration</a>' : '') +
+        '<button onclick="CMSSAuth.logout()" class="hover:text-yellow-300">Déconnexion</button></span></div>';
+      document.body.insertBefore(bar, document.body.firstChild);
+    });
+  })();
+</script>
+</head>
+<body>
+  <div class="no-print" style="margin-bottom: 20px;">
+    <button class="btn" onclick="window.print()">🖨️ Imprimer / Enregistrer en PDF</button>
+    <a href="reclamation.html" class="btn btn-secondary" style="text-decoration:none;display:inline-block;">← Retour</a>
+  </div>
+
+  <div class="header">
+    <img src="logo-cmss.png" alt="CMSS">
+    <div>
+      <h1>FORMULAIRE DE RÉCLAMATION</h1>
+      <div class="subtitle">Caisse Malienne de Sécurité Sociale — Direction des Relations Clients</div>
+    </div>
+  </div>
+
+  <p style="font-size:12px;color:#64748b;margin-bottom:16px;">
+    À remplir en majuscules. Service gratuit. À déposer en agence, centre de paiement ou envoyer à : contact@cmss.ml / BP 484 Bamako.
+  </p>
+
+  <div class="row">
+    <div class="field">
+      <label>Numéro d'affiliation *</label>
+      <div class="line"></div>
+    </div>
+    <div class="field">
+      <label>Date de la réclamation</label>
+      <div class="line"></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="field">
+      <label>Nom *</label>
+      <div class="line"></div>
+    </div>
+    <div class="field">
+      <label>Prénom(s) *</label>
+      <div class="line"></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="field">
+      <label>Téléphone *</label>
+      <div class="line"></div>
+    </div>
+    <div class="field">
+      <label>Email</label>
+      <div class="line"></div>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Adresse / Lieu de résidence</label>
+    <div class="line"></div>
+  </div>
+
+  <div class="field">
+    <label>Type de réclamation * (cochez)</label>
+    <div style="margin-top:8px;line-height:1.8;">
+      <span class="check">☐ Délai de traitement trop long</span>
+      <span class="check">☐ Pièces manquantes non justifiées</span><br>
+      <span class="check">☐ Erreur sur le montant de pension</span>
+      <span class="check">☐ Problème de paiement</span><br>
+      <span class="check">☐ Mauvaise information reçue</span>
+      <span class="check">☐ Accueil / qualité de service</span><br>
+      <span class="check">☐ Autre : _______________________________</span>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Objet (résumé) *</label>
+    <div class="line"></div>
+  </div>
+
+  <div class="field">
+    <label>Description détaillée * (faits, dates, références de dossier)</label>
+    <div class="box"></div>
+    <div class="box" style="min-height:60px;margin-top:4px;"></div>
+  </div>
+
+  <div class="field">
+    <label>N° de dossier concerné (si connu)</label>
+    <div class="line" style="max-width:50%;"></div>
+  </div>
+
+  <div style="margin-top:24px;">
+    <p style="font-size:12px;">Je certifie l'exactitude des informations fournies.</p>
+    <div class="row" style="margin-top:16px;">
+      <div class="field">
+        <label>Signature du réclamant</label>
+        <div class="line" style="min-height:50px;"></div>
+      </div>
+      <div class="field">
+        <label>Cachet / Visa CMSS (réservé)</label>
+        <div class="line" style="min-height:50px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <strong>CMSS</strong> — Direction des Relations Clients<br>
+    Numéro vert gratuit : 8000 2238 | Tél : +223 20 29 30 46 | Email : contact@cmss.ml<br>
+    Hamdallaye ACI 2000, Bamako — BP 484<br>
+    <em>Tous les services de la CMSS sont gratuits. Aucun paiement ne doit être exigé.</em>
+  </div>
+</body>
+</html>

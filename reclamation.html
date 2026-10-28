@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Réclamation — CMSS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{primary:{50:'#eff6ff',100:'#dbeafe',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e3a8a',900:'#1e3a5f'},gold:{500:'#f59e0b'}}}}}</script>
+<script src="auth.js"></script>
+<script>
+  (function(){
+    var s = CMSSAuth.requireAuth(["admin","agent"]);
+    if (!s) return;
+    window.__cmssSession = s;
+    document.addEventListener("DOMContentLoaded", function(){
+      var bar = document.createElement("div");
+      bar.className = "bg-slate-800 text-white text-xs";
+      bar.innerHTML = '<div class="max-w-6xl mx-auto px-4 py-1.5 flex justify-between items-center flex-wrap gap-1">' +
+        '<span>👤 ' + s.nom + ' (' + s.role + ')</span>' +
+        '<span class="flex gap-3">' +
+        (s.role === "admin" ? '<a href="admin.html" class="hover:text-yellow-300">Administration</a>' : '') +
+        '<button onclick="CMSSAuth.logout()" class="hover:text-yellow-300">Déconnexion</button></span></div>';
+      document.body.insertBefore(bar, document.body.firstChild);
+    });
+  })();
+</script>
+</head>
+<body class="bg-slate-50">
+
+  <div class="bg-primary-800 text-white text-sm py-2 px-4 flex justify-between items-center max-w-6xl mx-auto">
+    <a href="tel:80002238">📞 Numéro vert : <strong>8000 2238</strong></a>
+    <span class="text-primary-200 text-xs">Services gratuits</span>
+  </div>
+
+  <header class="bg-white shadow border-b-2 border-primary-700 sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2">
+        <img src="logo-cmss.png" alt="CMSS" class="h-10 bg-white rounded p-0.5 object-contain">
+        <span class="font-bold text-primary-800 hidden sm:inline">CMSS</span>
+      </a>
+      <nav class="hidden md:flex gap-1 text-sm font-medium">
+        <a href="index.html" class="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100">Accueil</a>
+        <a href="suivi.html" class="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100">Suivre mon dossier</a>
+        <a href="reclamation.html" class="px-3 py-2 rounded-md bg-primary-50 text-primary-700">Réclamation</a>
+        <a href="rdv.html" class="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100">Rendez-vous</a>
+        <a href="guides.html" class="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100">Pièces</a>
+        <a href="contacts.html" class="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100">Contacts</a>
+        <a href="directeur.html" class="px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100">Mot du Directeur</a>
+      </nav>
+      <a href="index.html" class="md:hidden text-sm text-primary-700 font-medium">← Accueil</a>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 py-8">
+
+    <div class="mb-8">
+      <h1 class="text-2xl sm:text-3xl font-bold text-slate-800 mb-2">Déposer une réclamation</h1>
+      <p class="text-slate-500">Après envoi, vous recevez un numéro de suivi utilisable dans « Suivre mon dossier ».</p>
+    </div>
+
+    <div class="bg-gradient-to-r from-gold-500/10 to-amber-50 border border-gold-500/30 rounded-2xl p-5 mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        <h2 class="font-semibold text-slate-800">📄 Formulaire de réclamation (à imprimer)</h2>
+        <p class="text-sm text-slate-500 mt-1">Téléchargez, imprimez et déposez en agence.</p>
+      </div>
+      <a href="formulaire-reclamation.html" target="_blank"
+         class="inline-flex items-center gap-2 bg-gold-500 hover:bg-amber-500 text-primary-900 font-semibold px-5 py-2.5 rounded-xl text-sm shadow transition shrink-0">
+        ⬇️ Télécharger / Imprimer
+      </a>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-6 sm:p-8">
+      <h2 class="font-semibold text-lg mb-6">Formulaire en ligne</h2>
+
+      <form id="formRec" onsubmit="envoyerReclamation(event)" class="space-y-5">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium mb-1">Numéro d'affiliation *</label>
+            <input required name="affiliation" id="aff" type="text" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-primary-500 outline-none" placeholder="Ex: 123456789">
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Nom et Prénom *</label>
+            <input required name="nom" id="nom" type="text" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-primary-500 outline-none">
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium mb-1">Téléphone *</label>
+            <input required name="tel" id="tel" type="tel" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-primary-500 outline-none" placeholder="76 00 00 00">
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Email (facultatif)</label>
+            <input name="email" id="email" type="email" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-primary-500 outline-none">
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Type de réclamation *</label>
+          <select required name="type" id="type" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-primary-500 outline-none">
+            <option value="">-- Choisir --</option>
+            <option>Délai de traitement trop long</option>
+            <option>Pièces manquantes non justifiées</option>
+            <option>Erreur sur le montant de pension</option>
+            <option>Problème de paiement</option>
+            <option>Mauvaise information reçue</option>
+            <option>Accueil / qualité de service</option>
+            <option>Autre</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Objet *</label>
+          <input required name="objet" id="objet" type="text" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-primary-500 outline-none" placeholder="Résumé en quelques mots">
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Description détaillée *</label>
+          <textarea required name="description" id="description" rows="5" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-primary-500 outline-none" placeholder="Expliquez clairement votre problème..."></textarea>
+        </div>
+        <button type="submit" class="w-full bg-primary-700 hover:bg-primary-800 text-white font-semibold py-3.5 rounded-xl transition">
+          Envoyer la réclamation
+        </button>
+      </form>
+
+      <div id="successBox" class="hidden mt-6 bg-green-50 border border-green-200 rounded-xl p-6 text-center">
+        <div class="text-4xl mb-2">✅</div>
+        <h3 class="font-bold text-green-800 text-lg">Réclamation enregistrée</h3>
+        <p class="text-sm text-green-700 mt-3">Votre numéro de suivi :</p>
+        <p class="text-2xl font-bold text-primary-800 my-2" id="numSuivi">REC-2026-XXXXX</p>
+        <p class="text-xs text-green-600 mb-4">Conservez ce numéro. Vous pouvez suivre l'avancement dans « Suivre mon dossier ».</p>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+          <a id="lienSuivi" href="suivi.html" class="inline-block bg-primary-700 hover:bg-primary-800 text-white font-semibold px-6 py-2.5 rounded-xl text-sm">
+            📋 Suivre ma réclamation
+          </a>
+          <button onclick="location.reload()" class="text-sm text-primary-700 font-medium underline py-2">Déposer une autre</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-6 text-center text-sm text-slate-500">
+      Besoin d'aide ? Appelez le <a href="tel:80002238" class="text-primary-700 font-medium">8000 2238</a>
+    </div>
+  </main>
+
+  <footer class="bg-primary-900 text-primary-300 text-center text-xs py-6 mt-12">
+    © 2026 CMSS — Direction des Relations Clients
+  </footer>
+
+  <script>
+    function envoyerReclamation(e) {
+      e.preventDefault();
+      const num = 'REC-2026-' + String(Math.floor(10000 + Math.random() * 90000));
+      const today = new Date();
+      const dateStr = today.toLocaleDateString('fr-FR');
+
+      const item = {
+        id: num,
+        cat: 'reclamation',
+        type: document.getElementById('type').value,
+        objet: document.getElementById('objet').value,
+        aff: document.getElementById('aff').value,
+        nom: document.getElementById('nom').value,
+        tel: document.getElementById('tel').value,
+        description: document.getElementById('description').value,
+        statut: 'soumise',
+        label: 'Soumise',
+        color: 'bg-yellow-100 text-yellow-800',
+        date: dateStr,
+        historique: [
+          { etape: 'Soumise', date: dateStr, desc: 'Réclamation enregistrée en ligne' }
+        ]
+      };
+
+      // Sauvegarder dans localStorage
+      const list = JSON.parse(localStorage.getItem('cmss_suivis') || '[]');
+      list.unshift(item);
+      localStorage.setItem('cmss_suivis', JSON.stringify(list));
+
+      // Enregistrer l'action de l'agent
+      if (window.__cmssSession && window.CMSSAuth) {
+        CMSSAuth.recordAction(window.__cmssSession.id, 'reclamation', num + ' — ' + item.objet);
+      }
+
+      document.getElementById('formRec').classList.add('hidden');
+      document.getElementById('numSuivi').textContent = num;
+      document.getElementById('lienSuivi').href = 'suivi.html?n=' + encodeURIComponent(num);
+      document.getElementById('successBox').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>

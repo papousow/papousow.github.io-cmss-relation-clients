@@ -1,0 +1,38 @@
+========================================
+CMSS RELATION CLIENTS — VERSION PRODUCTION
+========================================
+
+CONTENU
+-------
+- login.html          → Point d'entrée (connexion obligatoire)
+- admin.html          → Création agents + tableau de bord évaluation
+- index.html          → Accueil agents
+- suivi / reclamation / rdv / guides / contacts / directeur
+- config.js           → À CONFIGURER (Supabase + SMS + API CMSS)
+- db.js               → Base centrale (cloud) ou local
+- sql/schema.sql      → À exécuter dans Supabase
+- docs/GUIDE-DEPLOIEMENT.md → Guide complet
+
+COMPTE ADMIN
+------------
+Identifiant : admin
+Mot de passe : Admin@CMSS2026
+(Changez-le après la première connexion)
+
+POUR ACTIVER LA BASE CENTRALE (données partagées + sauvegardes)
+---------------------------------------------------------------
+1. Compte gratuit : https://supabase.com
+2. Exécuter sql/schema.sql dans SQL Editor
+3. Copier URL + clé anon dans config.js
+4. Ouvrir login.html
+
+POUR GITHUB / MISE EN LIGNE
+---------------------------
+Envoyez TOUT ce dossier sur votre dépôt GitHub
+Settings → Pages → main → Save
+URL : https://papousow.github.io/cmss-relation-clients/login.html
+
+DOMAINE CMSS / SMS / API MÉTIER
+-------------------------------
+Voir docs/GUIDE-DEPLOIEMENT.md
+
