@@ -5,72 +5,109 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Connexion — CMSS Relation Clients</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>tailwind.config={theme:{extend:{colors:{primary:{700:'#1d4ed8',800:'#1e3a8a',900:'#1e3a5f'},gold:{500:'#f59e0b'}}}}}</script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="config.js"></script>
-  <script src="db.js"></script>
+  <script>tailwind.config={theme:{extend:{colors:{primary:{50:'#eff6ff',100:'#dbeafe',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e3a8a',900:'#1e3a5f'},gold:{500:'#f59e0b'}}}}}</script>
 </head>
 <body class="bg-gradient-to-br from-primary-800 via-primary-900 to-slate-900 min-h-screen flex items-center justify-center p-4">
+
   <div class="w-full max-w-md">
     <div class="text-center mb-8">
       <img src="logo-cmss.png" alt="CMSS" class="h-20 mx-auto bg-white rounded-xl p-2 shadow-lg object-contain mb-4">
       <h1 class="text-2xl font-bold text-white">CMSS — Relation Clients</h1>
-      <p class="text-primary-200 text-sm mt-1">Espace agents & administrateurs</p>
-      <p id="modeBadge" class="mt-2 text-xs text-primary-300"></p>
+      <p class="text-primary-200 text-sm mt-1">Espace réservé aux agents et administrateurs</p>
     </div>
+
     <div class="bg-white rounded-2xl shadow-2xl p-6 sm:p-8">
       <h2 class="text-lg font-semibold text-slate-800 mb-6 text-center">Connexion</h2>
-      <form onsubmit="connecter(event)" class="space-y-4">
+
+      <form id="loginForm" onsubmit="connecter(event)" class="space-y-4">
         <div>
           <label class="block text-sm font-medium text-slate-700 mb-1">Nom d'utilisateur</label>
-          <input required id="username" type="text" class="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary-700" placeholder="Identifiant">
+          <input required id="username" type="text" autocomplete="username"
+                 class="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500 outline-none"
+                 placeholder="Votre identifiant">
         </div>
         <div>
           <label class="block text-sm font-medium text-slate-700 mb-1">Mot de passe</label>
-          <input required id="password" type="password" class="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary-700">
+          <input required id="password" type="password" autocomplete="current-password"
+                 class="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500 outline-none"
+                 placeholder="••••••••">
         </div>
         <p id="errorMsg" class="hidden text-sm text-red-600 text-center"></p>
-        <button type="submit" class="w-full bg-primary-700 hover:bg-primary-800 text-white font-semibold py-3 rounded-xl">Se connecter</button>
+        <button type="submit" class="w-full bg-primary-700 hover:bg-primary-800 text-white font-semibold py-3 rounded-xl transition">
+          Se connecter
+        </button>
       </form>
-      <div class="mt-6 pt-4 border-t text-center text-xs text-slate-400">
-        Admin par défaut : <strong>admin</strong> / <strong>Admin@CMSS2026</strong>
+
+      <div class="mt-6 pt-4 border-t border-slate-100 text-center text-xs text-slate-400">
+        Accès strictement réservé au personnel autorisé de la CMSS.
       </div>
     </div>
+
+    <p class="text-center text-primary-300 text-xs mt-6">
+      © 2026 CMSS — Direction des Relations Clients
+    </p>
   </div>
+
   <script>
-    (async function(){
-      const mode = await CMSSDB.init();
-      document.getElementById('modeBadge').textContent =
-        mode === 'cloud' ? '● Base centrale (cloud) — données partagées' : '○ Mode local — configurez config.js pour le cloud';
-      const s = localStorage.getItem('cmss_session');
-      if (s) {
-        const sess = JSON.parse(s);
-        location.href = sess.role === 'admin' ? 'admin.html' : 'index.html';
+    // Initialiser les données au premier chargement
+    function initAuth() {
+      if (!localStorage.getItem('cmss_users')) {
+        const users = [
+          {
+            id: 'admin-001',
+            username: 'admin',
+            password: 'Admin@CMSS2026',
+            nom: 'Administrateur',
+            role: 'admin',
+            actif: true,
+            createdAt: new Date().toISOString()
+          }
+        ];
+        localStorage.setItem('cmss_users', JSON.stringify(users));
       }
-    })();
-    async function connecter(e) {
+      if (!localStorage.getItem('cmss_agent_stats')) {
+        localStorage.setItem('cmss_agent_stats', JSON.stringify({}));
+      }
+    }
+
+    function connecter(e) {
       e.preventDefault();
-      const msg = document.getElementById('errorMsg');
-      msg.classList.add('hidden');
-      try {
-        const user = await CMSSDB.login(
-          document.getElementById('username').value.trim(),
-          document.getElementById('password').value
-        );
-        if (!user) {
-          msg.textContent = 'Identifiant ou mot de passe incorrect.';
-          msg.classList.remove('hidden');
-          return;
-        }
-        localStorage.setItem('cmss_session', JSON.stringify({
-          id: user.id, username: user.username, nom: user.nom, role: user.role,
-          loginAt: new Date().toISOString()
-        }));
-        location.href = user.role === 'admin' ? 'admin.html' : 'index.html';
-      } catch (err) {
-        msg.textContent = 'Erreur : ' + (err.message || err);
+      initAuth();
+      const u = document.getElementById('username').value.trim();
+      const p = document.getElementById('password').value;
+      const users = JSON.parse(localStorage.getItem('cmss_users') || '[]');
+      const user = users.find(x => x.username === u && x.password === p && x.actif);
+
+      if (!user) {
+        const msg = document.getElementById('errorMsg');
+        msg.textContent = 'Identifiant ou mot de passe incorrect, ou compte désactivé.';
         msg.classList.remove('hidden');
+        return;
       }
+
+      // Session
+      localStorage.setItem('cmss_session', JSON.stringify({
+        id: user.id,
+        username: user.username,
+        nom: user.nom,
+        role: user.role,
+        loginAt: new Date().toISOString()
+      }));
+
+      // Redirection selon rôle
+      if (user.role === 'admin') {
+        window.location.href = 'admin.html';
+      } else {
+        window.location.href = 'index.html';
+      }
+    }
+
+    // Si déjà connecté, rediriger
+    initAuth();
+    const session = localStorage.getItem('cmss_session');
+    if (session) {
+      const s = JSON.parse(session);
+      window.location.href = s.role === 'admin' ? 'admin.html' : 'index.html';
     }
   </script>
 </body>
